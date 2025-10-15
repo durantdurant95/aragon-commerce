@@ -1,75 +1,110 @@
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fcommerce&project-name=commerce&repo-name=commerce&demo-title=Next.js%20Commerce&demo-url=https%3A%2F%2Fdemo.vercel.store&demo-image=https%3A%2F%2Fbigcommerce-demo-asset-ksvtgfvnd.vercel.app%2Fbigcommerce.png&env=COMPANY_NAME,SHOPIFY_REVALIDATION_SECRET,SHOPIFY_STORE_DOMAIN,SHOPIFY_STOREFRONT_ACCESS_TOKEN,SITE_NAME)
+# Next.js Commerce - Static Data Version
 
-# Next.js Commerce
+A high-performance, server-rendered Next.js App Router ecommerce application **modified to use static JSON data** instead of a backend service.
 
-A high-performance, server-rendered Next.js App Router ecommerce application.
+This is a **demo/sample project** that uses local JSON files for product data and localStorage for cart management - perfect for learning, prototyping, or showcasing frontend skills without needing a backend.
 
-This template uses React Server Components, Server Actions, `Suspense`, `useOptimistic`, and more.
+## 🎯 What's Different?
 
-<h3 id="v1-note"></h3>
+This version has been converted from the original Shopify-integrated template to work entirely with static data:
 
-> Note: Looking for Next.js Commerce v1? View the [code](https://github.com/vercel/commerce/tree/v1), [demo](https://commerce-v1.vercel.store), and [release notes](https://github.com/vercel/commerce/releases/tag/v1).
+- ✅ **No backend required** - All product data is stored in JSON files
+- ✅ **No database needed** - Cart uses browser localStorage
+- ✅ **Easy to customize** - Just edit JSON files to change products
+- ✅ **Same beautiful UI** - All the original frontend components and design
+- ✅ **Perfect for demos** - Great for portfolios and learning projects
 
-## Providers
+## 📁 Data Management
 
-Vercel will only be actively maintaining a Shopify version [as outlined in our vision and strategy for Next.js Commerce](https://github.com/vercel/commerce/pull/966).
+All data is stored in `/lib/data/`:
 
-Vercel is happy to partner and work with any commerce provider to help them get a similar template up and running and listed below. Alternative providers should be able to fork this repository and swap out the `lib/shopify` file with their own implementation while leaving the rest of the template mostly unchanged.
+- `products.json` - Product catalog
+- `collections.json` - Product categories/collections
+- `menus.json` - Navigation menus
+- `pages.json` - Static pages (About, Terms, etc.)
 
-- Shopify (this repository)
-- [BigCommerce](https://github.com/bigcommerce/nextjs-commerce) ([Demo](https://next-commerce-v2.vercel.app/))
-- [Ecwid by Lightspeed](https://github.com/Ecwid/ecwid-nextjs-commerce/) ([Demo](https://ecwid-nextjs-commerce.vercel.app/))
-- [Geins](https://github.com/geins-io/vercel-nextjs-commerce) ([Demo](https://geins-nextjs-commerce-starter.vercel.app/))
-- [Medusa](https://github.com/medusajs/vercel-commerce) ([Demo](https://medusa-nextjs-commerce.vercel.app/))
-- [Prodigy Commerce](https://github.com/prodigycommerce/nextjs-commerce) ([Demo](https://prodigy-nextjs-commerce.vercel.app/))
-- [Saleor](https://github.com/saleor/nextjs-commerce) ([Demo](https://saleor-commerce.vercel.app/))
-- [Shopware](https://github.com/shopwareLabs/vercel-commerce) ([Demo](https://shopware-vercel-commerce-react.vercel.app/))
-- [Swell](https://github.com/swellstores/verswell-commerce) ([Demo](https://verswell-commerce.vercel.app/))
-- [Umbraco](https://github.com/umbraco/Umbraco.VercelCommerce.Demo) ([Demo](https://vercel-commerce-demo.umbraco.com/))
-- [Wix](https://github.com/wix/headless-templates/tree/main/nextjs/commerce) ([Demo](https://wix-nextjs-commerce.vercel.app/))
-- [Fourthwall](https://github.com/FourthwallHQ/vercel-commerce) ([Demo](https://vercel-storefront.fourthwall.app/))
+See [`/lib/data/README.md`](./lib/data/README.md) for detailed instructions on managing your data.
 
-> Note: Providers, if you are looking to use similar products for your demo, you can [download these assets](https://drive.google.com/file/d/1q_bKerjrwZgHwCw0ovfUMW6He9VtepO_/view?usp=sharing).
-
-## Integrations
-
-Integrations enable upgraded or additional functionality for Next.js Commerce
-
-- [Orama](https://github.com/oramasearch/nextjs-commerce) ([Demo](https://vercel-commerce.oramasearch.com/))
-
-  - Upgrades search to include typeahead with dynamic re-rendering, vector-based similarity search, and JS-based configuration.
-  - Search runs entirely in the browser for smaller catalogs or on a CDN for larger.
-
-- [React Bricks](https://github.com/ReactBricks/nextjs-commerce-rb) ([Demo](https://nextjs-commerce.reactbricks.com/))
-  - Edit pages, product details, and footer content visually using [React Bricks](https://www.reactbricks.com) visual headless CMS.
-
-## Running locally
-
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js Commerce. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables) for this, but a `.env` file is all that is necessary.
-
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control your Shopify store.
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+## 🚀 Running Locally
 
 ```bash
+# Install dependencies
 pnpm install
+
+# Run the development server
 pnpm dev
 ```
 
-Your app should now be running on [localhost:3000](http://localhost:3000/).
+Your app will be running on [localhost:3000](http://localhost:3000/).
 
-<details>
-  <summary>Expand if you work at Vercel and want to run locally and / or contribute</summary>
+**No environment variables or backend configuration needed!**
 
-1. Run `vc link`.
-1. Select the `Vercel Solutions` scope.
-1. Connect to the existing `commerce-shopify` project.
-1. Run `vc env pull` to get environment variables.
-1. Run `pnpm dev` to ensure everything is working correctly.
-</details>
+## 🛒 How the Cart Works
 
-## Vercel, Next.js Commerce, and Shopify Integration Guide
+The shopping cart uses **browser localStorage**:
 
-You can use this comprehensive [integration guide](https://vercel.com/docs/integrations/ecommerce/shopify) with step-by-step instructions on how to configure Shopify as a headless CMS using Next.js Commerce as your headless Shopify storefront on Vercel.
+- Cart data persists between page refreshes
+- Cart is unique to each browser/device
+- No checkout functionality (demo only)
+- Can be easily extended to integrate with a backend when needed
+
+## ✏️ Customizing Your Store
+
+### Adding Products
+
+1. Edit `/lib/data/products.json`
+2. Add your product object (copy an existing one as a template)
+3. Update product details, variants, images, and pricing
+4. Add the product handle to collections in `/lib/data/collections.json`
+
+### Changing Navigation
+
+1. Edit `/lib/data/menus.json`
+2. Modify `main-menu` for top navigation
+3. Modify `footer-menu` for footer links
+
+### Updating Pages
+
+1. Edit `/lib/data/pages.json`
+2. Update content for About, Terms, Privacy Policy, etc.
+
+## 🎨 Features
+
+This template uses modern Next.js features:
+
+- React Server Components
+- Server Actions
+- Suspense for loading states
+- Optimistic UI updates
+- TypeScript throughout
+
+## 📝 Original Template
+
+This project is based on [Vercel's Next.js Commerce](https://github.com/vercel/commerce) template but modified to work without any backend integration.
+
+## 🔄 Converting Back to Use a Backend
+
+If you want to integrate this with a real backend later:
+
+1. Replace `/lib/data/index.ts` with API calls to your backend
+2. Update cart management to use server-side cart operations
+3. Add checkout functionality
+4. Set up environment variables for your backend
+
+The frontend components are already designed to work with dynamic data, so the conversion is straightforward!
+
+## 📦 Deployment
+
+Deploy to Vercel:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/aragon-commerce)
+
+Since this uses static data, no environment variables are required for deployment!
+
+## 🤝 Contributing
+
+Feel free to customize this project for your needs. If you make improvements, consider sharing them!
+
+## 📄 License
+
+MIT

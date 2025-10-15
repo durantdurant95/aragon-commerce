@@ -1,238 +1,112 @@
-'use client';
+"use client";
 
-import type {
-  Cart,
-  CartItem,
-  Product,
-  ProductVariant
-} from 'lib/shopify/types';
+import {
+  addToLocalCart,
+  getLocalCart,
+  updateLocalCartItem,
+} from "lib/cart-utils";
+import type { Cart, CartItem, Product, ProductVariant } from "lib/types";
 import React, {
   createContext,
-  use,
   useContext,
+  useEffect,
   useMemo,
-  useOptimistic
-} from 'react';
+  useState,
+} from "react";
 
-type UpdateType = 'plus' | 'minus' | 'delete';
-
-type CartAction =
-  | {
-      type: 'UPDATE_ITEM';
-      payload: { merchandiseId: string; updateType: UpdateType };
-    }
-  | {
-      type: 'ADD_ITEM';
-      payload: { variant: ProductVariant; product: Product };
-    };
+type UpdateType = "plus" | "minus" | "delete";
 
 type CartContextType = {
-  cartPromise: Promise<Cart | undefined>;
+  cart: Cart;
+  updateCartItem: (merchandiseId: string, updateType: UpdateType) => void;
+  addCartItem: (variant: ProductVariant, product: Product) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-function calculateItemCost(quantity: number, price: string): string {
-  return (Number(price) * quantity).toString();
-}
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [cart, setCart] = useState<Cart>(() => {
+    // Initialize with empty cart on server/first render
+    return {
+      id: "local-cart",
+      checkoutUrl: "#",
+      cost: {
+        subtotalAmount: { amount: "0.00", currencyCode: "USD" },
+        totalAmount: { amount: "0.00", currencyCode: "USD" },
+        totalTaxAmount: { amount: "0.00", currencyCode: "USD" },
+      },
+      lines: [],
+      totalQuantity: 0,
+    };
+  });
 
-function updateCartItem(
-  item: CartItem,
-  updateType: UpdateType
-): CartItem | null {
-  if (updateType === 'delete') return null;
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const localCart = getLocalCart();
+    setCart(localCart);
+  }, []);
 
-  const newQuantity =
-    updateType === 'plus' ? item.quantity + 1 : item.quantity - 1;
-  if (newQuantity === 0) return null;
+  const updateCartItem = (merchandiseId: string, updateType: UpdateType) => {
+    const item = cart.lines.find(
+      (line: CartItem) => line.merchandise.id === merchandiseId
+    );
+    if (!item) return;
 
-  const singleItemAmount = Number(item.cost.totalAmount.amount) / item.quantity;
-  const newTotalAmount = calculateItemCost(
-    newQuantity,
-    singleItemAmount.toString()
-  );
-
-  return {
-    ...item,
-    quantity: newQuantity,
-    cost: {
-      ...item.cost,
-      totalAmount: {
-        ...item.cost.totalAmount,
-        amount: newTotalAmount
-      }
+    let newQuantity = item.quantity;
+    if (updateType === "plus") {
+      newQuantity += 1;
+    } else if (updateType === "minus") {
+      newQuantity -= 1;
+    } else if (updateType === "delete") {
+      newQuantity = 0;
     }
+
+    const singleItemPrice = {
+      amount: (
+        parseFloat(item.cost.totalAmount.amount) / item.quantity
+      ).toFixed(2),
+      currencyCode: item.cost.totalAmount.currencyCode,
+    };
+
+    const updatedCart = updateLocalCartItem(
+      merchandiseId,
+      newQuantity,
+      singleItemPrice
+    );
+    setCart(updatedCart);
   };
-}
 
-function createOrUpdateCartItem(
-  existingItem: CartItem | undefined,
-  variant: ProductVariant,
-  product: Product
-): CartItem {
-  const quantity = existingItem ? existingItem.quantity + 1 : 1;
-  const totalAmount = calculateItemCost(quantity, variant.price.amount);
-
-  return {
-    id: existingItem?.id,
-    quantity,
-    cost: {
-      totalAmount: {
-        amount: totalAmount,
-        currencyCode: variant.price.currencyCode
-      }
-    },
-    merchandise: {
-      id: variant.id,
-      title: variant.title,
-      selectedOptions: variant.selectedOptions,
-      product: {
+  const addCartItem = (variant: ProductVariant, product: Product) => {
+    const updatedCart = addToLocalCart(
+      variant.id,
+      1,
+      {
         id: product.id,
         handle: product.handle,
         title: product.title,
-        featuredImage: product.featuredImage
-      }
-    }
+        featuredImage: product.featuredImage,
+      },
+      variant
+    );
+    setCart(updatedCart);
   };
-}
 
-function updateCartTotals(
-  lines: CartItem[]
-): Pick<Cart, 'totalQuantity' | 'cost'> {
-  const totalQuantity = lines.reduce((sum, item) => sum + item.quantity, 0);
-  const totalAmount = lines.reduce(
-    (sum, item) => sum + Number(item.cost.totalAmount.amount),
-    0
+  const value = useMemo(
+    () => ({
+      cart,
+      updateCartItem,
+      addCartItem,
+    }),
+    [cart]
   );
-  const currencyCode = lines[0]?.cost.totalAmount.currencyCode ?? 'USD';
 
-  return {
-    totalQuantity,
-    cost: {
-      subtotalAmount: { amount: totalAmount.toString(), currencyCode },
-      totalAmount: { amount: totalAmount.toString(), currencyCode },
-      totalTaxAmount: { amount: '0', currencyCode }
-    }
-  };
-}
-
-function createEmptyCart(): Cart {
-  return {
-    id: undefined,
-    checkoutUrl: '',
-    totalQuantity: 0,
-    lines: [],
-    cost: {
-      subtotalAmount: { amount: '0', currencyCode: 'USD' },
-      totalAmount: { amount: '0', currencyCode: 'USD' },
-      totalTaxAmount: { amount: '0', currencyCode: 'USD' }
-    }
-  };
-}
-
-function cartReducer(state: Cart | undefined, action: CartAction): Cart {
-  const currentCart = state || createEmptyCart();
-
-  switch (action.type) {
-    case 'UPDATE_ITEM': {
-      const { merchandiseId, updateType } = action.payload;
-      const updatedLines = currentCart.lines
-        .map((item) =>
-          item.merchandise.id === merchandiseId
-            ? updateCartItem(item, updateType)
-            : item
-        )
-        .filter(Boolean) as CartItem[];
-
-      if (updatedLines.length === 0) {
-        return {
-          ...currentCart,
-          lines: [],
-          totalQuantity: 0,
-          cost: {
-            ...currentCart.cost,
-            totalAmount: { ...currentCart.cost.totalAmount, amount: '0' }
-          }
-        };
-      }
-
-      return {
-        ...currentCart,
-        ...updateCartTotals(updatedLines),
-        lines: updatedLines
-      };
-    }
-    case 'ADD_ITEM': {
-      const { variant, product } = action.payload;
-      const existingItem = currentCart.lines.find(
-        (item) => item.merchandise.id === variant.id
-      );
-      const updatedItem = createOrUpdateCartItem(
-        existingItem,
-        variant,
-        product
-      );
-
-      const updatedLines = existingItem
-        ? currentCart.lines.map((item) =>
-            item.merchandise.id === variant.id ? updatedItem : item
-          )
-        : [...currentCart.lines, updatedItem];
-
-      return {
-        ...currentCart,
-        ...updateCartTotals(updatedLines),
-        lines: updatedLines
-      };
-    }
-    default:
-      return currentCart;
-  }
-}
-
-export function CartProvider({
-  children,
-  cartPromise
-}: {
-  children: React.ReactNode;
-  cartPromise: Promise<Cart | undefined>;
-}) {
-  return (
-    <CartContext.Provider value={{ cartPromise }}>
-      {children}
-    </CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 export function useCart() {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider");
   }
-
-  const initialCart = use(context.cartPromise);
-  const [optimisticCart, updateOptimisticCart] = useOptimistic(
-    initialCart,
-    cartReducer
-  );
-
-  const updateCartItem = (merchandiseId: string, updateType: UpdateType) => {
-    updateOptimisticCart({
-      type: 'UPDATE_ITEM',
-      payload: { merchandiseId, updateType }
-    });
-  };
-
-  const addCartItem = (variant: ProductVariant, product: Product) => {
-    updateOptimisticCart({ type: 'ADD_ITEM', payload: { variant, product } });
-  };
-
-  return useMemo(
-    () => ({
-      cart: optimisticCart,
-      updateCartItem,
-      addCartItem
-    }),
-    [optimisticCart]
-  );
+  return context;
 }

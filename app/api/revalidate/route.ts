@@ -1,6 +1,7 @@
-import { revalidate } from 'lib/shopify';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  return revalidate(req);
+  // Revalidation is not needed for static data
+  // This endpoint is kept for compatibility but does nothing
+  return NextResponse.json({ status: 200 });
 }

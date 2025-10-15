@@ -1,0 +1,67 @@
+[
+  {
+    "id": "1",
+    "title": "About",
+    "handle": "about",
+    "body": "<p>This is a demo e-commerce store built with Next.js. All products and information are for demonstration purposes only.</p>",
+    "bodySummary": "This is a demo e-commerce store built with Next.js.",
+    "seo": {
+      "title": "About Us",
+      "description": "Learn more about our demo store"
+    },
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "2",
+    "title": "Terms & Conditions",
+    "handle": "terms-conditions",
+    "body": "<p>These are sample terms and conditions for demonstration purposes.</p>",
+    "bodySummary": "Sample terms and conditions",
+    "seo": {
+      "title": "Terms & Conditions",
+      "description": "Read our terms and conditions"
+    },
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "3",
+    "title": "Shipping & Return Policy",
+    "handle": "shipping-return-policy",
+    "body": "<p>This is a sample shipping and return policy for demonstration purposes.</p>",
+    "bodySummary": "Sample shipping and return policy",
+    "seo": {
+      "title": "Shipping & Return Policy",
+      "description": "Learn about our shipping and return policy"
+    },
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "4",
+    "title": "Privacy Policy",
+    "handle": "privacy-policy",
+    "body": "<p>This is a sample privacy policy for demonstration purposes.</p>",
+    "bodySummary": "Sample privacy policy",
+    "seo": {
+      "title": "Privacy Policy",
+      "description": "Read our privacy policy"
+    },
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "5",
+    "title": "FAQ",
+    "handle": "faq",
+    "body": "<p>Frequently asked questions - sample content for demonstration purposes.</p>",
+    "bodySummary": "Frequently asked questions",
+    "seo": {
+      "title": "FAQ",
+      "description": "Frequently asked questions"
+    },
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  }
+]

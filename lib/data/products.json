@@ -1,0 +1,437 @@
+[
+  {
+    "id": "1",
+    "handle": "acme-drawstring-bag",
+    "availableForSale": true,
+    "title": "Acme Drawstring Bag",
+    "description": "The Acme Drawstring Bag is a versatile and stylish bag that's perfect for everyday use.",
+    "descriptionHtml": "<p>The Acme Drawstring Bag is a versatile and stylish bag that's perfect for everyday use.</p>",
+    "options": [
+      {
+        "id": "option-1",
+        "name": "Color",
+        "values": ["Black", "White"]
+      }
+    ],
+    "priceRange": {
+      "maxVariantPrice": {
+        "amount": "12.00",
+        "currencyCode": "USD"
+      },
+      "minVariantPrice": {
+        "amount": "12.00",
+        "currencyCode": "USD"
+      }
+    },
+    "variants": [
+      {
+        "id": "variant-1-1",
+        "title": "Black",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Color",
+            "value": "Black"
+          }
+        ],
+        "price": {
+          "amount": "12.00",
+          "currencyCode": "USD"
+        }
+      },
+      {
+        "id": "variant-1-2",
+        "title": "White",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Color",
+            "value": "White"
+          }
+        ],
+        "price": {
+          "amount": "12.00",
+          "currencyCode": "USD"
+        }
+      }
+    ],
+    "featuredImage": {
+      "url": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
+      "altText": "Acme Drawstring Bag",
+      "width": 800,
+      "height": 800
+    },
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
+        "altText": "Acme Drawstring Bag - Front View",
+        "width": 800,
+        "height": 800
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1491637639811-60e2756cc1c7?w=800&q=80",
+        "altText": "Acme Drawstring Bag - Side View",
+        "width": 800,
+        "height": 800
+      }
+    ],
+    "seo": {
+      "title": "Acme Drawstring Bag",
+      "description": "The Acme Drawstring Bag is a versatile and stylish bag that's perfect for everyday use."
+    },
+    "tags": [],
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "2",
+    "handle": "acme-cup",
+    "availableForSale": true,
+    "title": "Acme Cup",
+    "description": "The Acme Cup is a high-quality ceramic mug perfect for your morning coffee or tea.",
+    "descriptionHtml": "<p>The Acme Cup is a high-quality ceramic mug perfect for your morning coffee or tea.</p>",
+    "options": [
+      {
+        "id": "option-2",
+        "name": "Size",
+        "values": ["Small", "Large"]
+      }
+    ],
+    "priceRange": {
+      "maxVariantPrice": {
+        "amount": "18.00",
+        "currencyCode": "USD"
+      },
+      "minVariantPrice": {
+        "amount": "15.00",
+        "currencyCode": "USD"
+      }
+    },
+    "variants": [
+      {
+        "id": "variant-2-1",
+        "title": "Small",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Size",
+            "value": "Small"
+          }
+        ],
+        "price": {
+          "amount": "15.00",
+          "currencyCode": "USD"
+        }
+      },
+      {
+        "id": "variant-2-2",
+        "title": "Large",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Size",
+            "value": "Large"
+          }
+        ],
+        "price": {
+          "amount": "18.00",
+          "currencyCode": "USD"
+        }
+      }
+    ],
+    "featuredImage": {
+      "url": "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=800&q=80",
+      "altText": "Acme Cup",
+      "width": 800,
+      "height": 800
+    },
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=800&q=80",
+        "altText": "Acme Cup - Front View",
+        "width": 800,
+        "height": 800
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1517256673644-36ad11246d21?w=800&q=80",
+        "altText": "Acme Cup - Detail",
+        "width": 800,
+        "height": 800
+      }
+    ],
+    "seo": {
+      "title": "Acme Cup",
+      "description": "The Acme Cup is a high-quality ceramic mug perfect for your morning coffee or tea."
+    },
+    "tags": [],
+    "updatedAt": "2024-01-16T10:00:00Z"
+  },
+  {
+    "id": "3",
+    "handle": "acme-tshirt",
+    "availableForSale": true,
+    "title": "Acme T-Shirt",
+    "description": "A comfortable and stylish t-shirt made from 100% organic cotton.",
+    "descriptionHtml": "<p>A comfortable and stylish t-shirt made from 100% organic cotton.</p>",
+    "options": [
+      {
+        "id": "option-3-1",
+        "name": "Size",
+        "values": ["S", "M", "L", "XL"]
+      },
+      {
+        "id": "option-3-2",
+        "name": "Color",
+        "values": ["Black", "White", "Navy"]
+      }
+    ],
+    "priceRange": {
+      "maxVariantPrice": {
+        "amount": "25.00",
+        "currencyCode": "USD"
+      },
+      "minVariantPrice": {
+        "amount": "25.00",
+        "currencyCode": "USD"
+      }
+    },
+    "variants": [
+      {
+        "id": "variant-3-1",
+        "title": "S / Black",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Size",
+            "value": "S"
+          },
+          {
+            "name": "Color",
+            "value": "Black"
+          }
+        ],
+        "price": {
+          "amount": "25.00",
+          "currencyCode": "USD"
+        }
+      },
+      {
+        "id": "variant-3-2",
+        "title": "M / Black",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Size",
+            "value": "M"
+          },
+          {
+            "name": "Color",
+            "value": "Black"
+          }
+        ],
+        "price": {
+          "amount": "25.00",
+          "currencyCode": "USD"
+        }
+      },
+      {
+        "id": "variant-3-3",
+        "title": "L / White",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Size",
+            "value": "L"
+          },
+          {
+            "name": "Color",
+            "value": "White"
+          }
+        ],
+        "price": {
+          "amount": "25.00",
+          "currencyCode": "USD"
+        }
+      }
+    ],
+    "featuredImage": {
+      "url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
+      "altText": "Acme T-Shirt",
+      "width": 800,
+      "height": 800
+    },
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
+        "altText": "Acme T-Shirt - Front",
+        "width": 800,
+        "height": 800
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=800&q=80",
+        "altText": "Acme T-Shirt - Back",
+        "width": 800,
+        "height": 800
+      }
+    ],
+    "seo": {
+      "title": "Acme T-Shirt - Organic Cotton",
+      "description": "A comfortable and stylish t-shirt made from 100% organic cotton."
+    },
+    "tags": ["featured"],
+    "updatedAt": "2024-01-17T10:00:00Z"
+  },
+  {
+    "id": "4",
+    "handle": "acme-hoodie",
+    "availableForSale": true,
+    "title": "Acme Hoodie",
+    "description": "Stay warm and comfortable with our premium quality hoodie.",
+    "descriptionHtml": "<p>Stay warm and comfortable with our premium quality hoodie.</p>",
+    "options": [
+      {
+        "id": "option-4",
+        "name": "Size",
+        "values": ["M", "L", "XL"]
+      }
+    ],
+    "priceRange": {
+      "maxVariantPrice": {
+        "amount": "45.00",
+        "currencyCode": "USD"
+      },
+      "minVariantPrice": {
+        "amount": "45.00",
+        "currencyCode": "USD"
+      }
+    },
+    "variants": [
+      {
+        "id": "variant-4-1",
+        "title": "M",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Size",
+            "value": "M"
+          }
+        ],
+        "price": {
+          "amount": "45.00",
+          "currencyCode": "USD"
+        }
+      },
+      {
+        "id": "variant-4-2",
+        "title": "L",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Size",
+            "value": "L"
+          }
+        ],
+        "price": {
+          "amount": "45.00",
+          "currencyCode": "USD"
+        }
+      }
+    ],
+    "featuredImage": {
+      "url": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80",
+      "altText": "Acme Hoodie",
+      "width": 800,
+      "height": 800
+    },
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=80",
+        "altText": "Acme Hoodie - Front",
+        "width": 800,
+        "height": 800
+      }
+    ],
+    "seo": {
+      "title": "Acme Hoodie - Premium Quality",
+      "description": "Stay warm and comfortable with our premium quality hoodie."
+    },
+    "tags": ["featured"],
+    "updatedAt": "2024-01-18T10:00:00Z"
+  },
+  {
+    "id": "5",
+    "handle": "acme-backpack",
+    "availableForSale": true,
+    "title": "Acme Backpack",
+    "description": "A durable and spacious backpack for all your adventures.",
+    "descriptionHtml": "<p>A durable and spacious backpack for all your adventures.</p>",
+    "options": [
+      {
+        "id": "option-5",
+        "name": "Color",
+        "values": ["Gray", "Black"]
+      }
+    ],
+    "priceRange": {
+      "maxVariantPrice": {
+        "amount": "65.00",
+        "currencyCode": "USD"
+      },
+      "minVariantPrice": {
+        "amount": "65.00",
+        "currencyCode": "USD"
+      }
+    },
+    "variants": [
+      {
+        "id": "variant-5-1",
+        "title": "Gray",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Color",
+            "value": "Gray"
+          }
+        ],
+        "price": {
+          "amount": "65.00",
+          "currencyCode": "USD"
+        }
+      },
+      {
+        "id": "variant-5-2",
+        "title": "Black",
+        "availableForSale": true,
+        "selectedOptions": [
+          {
+            "name": "Color",
+            "value": "Black"
+          }
+        ],
+        "price": {
+          "amount": "65.00",
+          "currencyCode": "USD"
+        }
+      }
+    ],
+    "featuredImage": {
+      "url": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
+      "altText": "Acme Backpack",
+      "width": 800,
+      "height": 800
+    },
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
+        "altText": "Acme Backpack - Front",
+        "width": 800,
+        "height": 800
+      }
+    ],
+    "seo": {
+      "title": "Acme Backpack - Durable & Spacious",
+      "description": "A durable and spacious backpack for all your adventures."
+    },
+    "tags": ["featured"],
+    "updatedAt": "2024-01-19T10:00:00Z"
+  }
+]

@@ -1,0 +1,69 @@
+[
+  {
+    "handle": "all",
+    "title": "All Products",
+    "description": "Browse all of our products",
+    "seo": {
+      "title": "All Products",
+      "description": "Browse all of our products"
+    },
+    "updatedAt": "2024-01-15T10:00:00Z",
+    "productHandles": [
+      "acme-tshirt",
+      "acme-hoodie",
+      "acme-backpack",
+      "acme-drawstring-bag",
+      "acme-cup"
+    ]
+  },
+  {
+    "handle": "apparel",
+    "title": "Apparel",
+    "description": "Our collection of clothing and wearable items",
+    "seo": {
+      "title": "Apparel Collection",
+      "description": "Shop our stylish apparel collection"
+    },
+    "updatedAt": "2024-01-16T10:00:00Z",
+    "productHandles": ["acme-tshirt", "acme-hoodie"]
+  },
+  {
+    "handle": "accessories",
+    "title": "Accessories",
+    "description": "Complete your look with our accessories",
+    "seo": {
+      "title": "Accessories Collection",
+      "description": "Browse our accessories collection"
+    },
+    "updatedAt": "2024-01-17T10:00:00Z",
+    "productHandles": ["acme-drawstring-bag", "acme-cup", "acme-backpack"]
+  },
+  {
+    "handle": "hidden-homepage-featured-items",
+    "title": "Featured Items",
+    "description": "Featured products for the homepage",
+    "seo": {
+      "title": "Featured Items",
+      "description": "Featured products"
+    },
+    "updatedAt": "2024-01-18T10:00:00Z",
+    "productHandles": ["acme-cup", "acme-tshirt", "acme-hoodie"]
+  },
+  {
+    "handle": "hidden-homepage-carousel",
+    "title": "Homepage Carousel",
+    "description": "Products for the homepage carousel",
+    "seo": {
+      "title": "Homepage Carousel",
+      "description": "Carousel products"
+    },
+    "updatedAt": "2024-01-19T10:00:00Z",
+    "productHandles": [
+      "acme-tshirt",
+      "acme-hoodie",
+      "acme-backpack",
+      "acme-drawstring-bag",
+      "acme-cup"
+    ]
+  }
+]
