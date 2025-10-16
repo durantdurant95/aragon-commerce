@@ -1,4 +1,18 @@
 {
+  "next-js-frontend-header-menu": [
+    {
+      "title": "All",
+      "path": "/search"
+    },
+    {
+      "title": "Apparel",
+      "path": "/search/apparel"
+    },
+    {
+      "title": "Accessories",
+      "path": "/search/accessories"
+    }
+  ],
   "main-menu": [
     {
       "title": "All",

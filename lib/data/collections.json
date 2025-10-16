@@ -1,22 +1,5 @@
 [
   {
-    "handle": "all",
-    "title": "All Products",
-    "description": "Browse all of our products",
-    "seo": {
-      "title": "All Products",
-      "description": "Browse all of our products"
-    },
-    "updatedAt": "2024-01-15T10:00:00Z",
-    "productHandles": [
-      "acme-tshirt",
-      "acme-hoodie",
-      "acme-backpack",
-      "acme-drawstring-bag",
-      "acme-cup"
-    ]
-  },
-  {
     "handle": "apparel",
     "title": "Apparel",
     "description": "Our collection of clothing and wearable items",
