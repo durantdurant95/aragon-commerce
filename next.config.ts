@@ -9,10 +9,6 @@ export default {
     remotePatterns: [
       {
         protocol: "https",
-        pathname: "/s/files/**",
-      },
-      {
-        protocol: "https",
         hostname: "images.unsplash.com",
       },
     ],
