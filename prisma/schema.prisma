@@ -1,0 +1,133 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Product {
+  id               String           @id
+  handle           String           @unique
+  availableForSale Boolean          @default(true)
+  title            String
+  description      String           @db.Text
+  descriptionHtml  String           @db.Text
+  priceMin         Decimal          @db.Decimal(10, 2)
+  priceMax         Decimal          @db.Decimal(10, 2)
+  currencyCode     String           @default("USD")
+  featuredImageUrl String
+  featuredImageAlt String
+  seoTitle         String
+  seoDescription   String           @db.Text
+  tags             String[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  variants         ProductVariant[]
+  images           ProductImage[]
+  options          ProductOption[]
+
+  @@index([handle])
+  @@index([availableForSale])
+}
+
+model ProductVariant {
+  id               String  @id
+  productId        String
+  title            String
+  availableForSale Boolean @default(true)
+  price            Decimal @db.Decimal(10, 2)
+  currencyCode     String  @default("USD")
+  product          Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  url       String
+  altText   String
+  width     Int     @default(800)
+  height    Int     @default(800)
+  position  Int     @default(0)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model ProductOption {
+  id        String   @id @default(cuid())
+  productId String
+  name      String
+  values    String[]
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model Collection {
+  id          String   @id @default(cuid())
+  handle      String   @unique
+  title       String
+  description String   @db.Text
+  seoTitle    String
+  seoDescription String @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([handle])
+}
+
+model CollectionProduct {
+  id           String   @id @default(cuid())
+  collectionId String
+  productHandle String
+  position     Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  @@unique([collectionId, productHandle])
+  @@index([collectionId])
+  @@index([productHandle])
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  handle      String   @unique
+  title       String
+  body        String   @db.Text
+  bodySummary String   @db.Text
+  seoTitle    String?
+  seoDescription String? @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([handle])
+}
+
+model Menu {
+  id        String     @id @default(cuid())
+  handle    String     @unique
+  items     MenuItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([handle])
+}
+
+model MenuItem {
+  id        String   @id @default(cuid())
+  menuId    String
+  title     String
+  path      String
+  position  Int      @default(0)
+  menu      Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([menuId])
+}
