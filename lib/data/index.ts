@@ -165,7 +165,9 @@ export async function getCollectionProducts({
     return [];
   }
 
-  const productHandles = collectionProducts.map((cp) => cp.productHandle);
+  const productHandles = collectionProducts.map(
+    (cp: { productHandle: string }) => cp.productHandle
+  );
 
   // Build the query
   const where: any = {
