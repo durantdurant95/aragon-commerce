@@ -222,17 +222,26 @@ export async function getCollections(): Promise<Collection[]> {
       path: "/search",
       updatedAt: new Date().toISOString(),
     },
-    ...dbCollections.map((collection) => ({
-      handle: collection.handle,
-      title: collection.title,
-      description: collection.description,
-      seo: {
-        title: collection.seoTitle,
-        description: collection.seoDescription,
-      },
-      path: `/search/${collection.handle}`,
-      updatedAt: collection.updatedAt.toISOString(),
-    })),
+    ...dbCollections.map(
+      (collection: {
+        handle: string;
+        title: string;
+        description: string;
+        seoTitle: string;
+        seoDescription: string;
+        updatedAt: Date;
+      }) => ({
+        handle: collection.handle,
+        title: collection.title,
+        description: collection.description,
+        seo: {
+          title: collection.seoTitle,
+          description: collection.seoDescription,
+        },
+        path: `/search/${collection.handle}`,
+        updatedAt: collection.updatedAt.toISOString(),
+      })
+    ),
   ];
 }
 
@@ -250,7 +259,7 @@ export async function getMenu(handle: string): Promise<Menu[]> {
     return [];
   }
 
-  return menu.items.map((item) => ({
+  return menu.items.map((item: { title: string; path: string }) => ({
     title: item.title,
     path: item.path,
   }));
@@ -285,19 +294,31 @@ export async function getPages(): Promise<Page[]> {
     orderBy: { updatedAt: "desc" },
   });
 
-  return dbPages.map((page) => ({
-    id: page.id,
-    title: page.title,
-    handle: page.handle,
-    body: page.body,
-    bodySummary: page.bodySummary,
-    seo: {
-      title: page.seoTitle || page.title,
-      description: page.seoDescription || page.bodySummary,
-    },
-    createdAt: page.createdAt.toISOString(),
-    updatedAt: page.updatedAt.toISOString(),
-  }));
+  return dbPages.map(
+    (page: {
+      id: string;
+      title: string;
+      handle: string;
+      body: string;
+      bodySummary: string;
+      seoTitle: string | null;
+      seoDescription: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+    }) => ({
+      id: page.id,
+      title: page.title,
+      handle: page.handle,
+      body: page.body,
+      bodySummary: page.bodySummary,
+      seo: {
+        title: page.seoTitle || page.title,
+        description: page.seoDescription || page.bodySummary,
+      },
+      createdAt: page.createdAt.toISOString(),
+      updatedAt: page.updatedAt.toISOString(),
+    })
+  );
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
