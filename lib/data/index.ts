@@ -1,19 +1,67 @@
 import { HIDDEN_PRODUCT_TAG } from "lib/constants";
+import { prisma } from "lib/prisma";
 import { Cart, Collection, Menu, Page, Product } from "lib/types";
 
-// Import static data
-import collectionsData from "./collections.json";
-import menusData from "./menus.json";
-import pagesData from "./pages.json";
-import productsData from "./products.json";
-
-// Helper to simulate async operations
-const delay = (ms: number = 0) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+// Helper to transform database product to frontend Product type
+function transformProduct(dbProduct: any): Product {
+  return {
+    id: dbProduct.id,
+    handle: dbProduct.handle,
+    availableForSale: dbProduct.availableForSale,
+    title: dbProduct.title,
+    description: dbProduct.description,
+    descriptionHtml: dbProduct.descriptionHtml,
+    options:
+      dbProduct.options?.map((opt: any) => ({
+        id: opt.id,
+        name: opt.name,
+        values: opt.values,
+      })) || [],
+    priceRange: {
+      maxVariantPrice: {
+        amount: dbProduct.priceMax.toString(),
+        currencyCode: dbProduct.currencyCode,
+      },
+      minVariantPrice: {
+        amount: dbProduct.priceMin.toString(),
+        currencyCode: dbProduct.currencyCode,
+      },
+    },
+    variants:
+      dbProduct.variants?.map((v: any) => ({
+        id: v.id,
+        title: v.title,
+        availableForSale: v.availableForSale,
+        selectedOptions: [],
+        price: {
+          amount: v.price.toString(),
+          currencyCode: v.currencyCode,
+        },
+      })) || [],
+    featuredImage: {
+      url: dbProduct.featuredImageUrl,
+      altText: dbProduct.featuredImageAlt,
+      width: 800,
+      height: 800,
+    },
+    images:
+      dbProduct.images?.map((img: any) => ({
+        url: img.url,
+        altText: img.altText,
+        width: img.width,
+        height: img.height,
+      })) || [],
+    seo: {
+      title: dbProduct.seoTitle,
+      description: dbProduct.seoDescription,
+    },
+    tags: dbProduct.tags || [],
+    updatedAt: dbProduct.updatedAt.toISOString(),
+  };
+}
 
 // Cart operations will be handled client-side with localStorage
 export async function createCart(): Promise<Cart> {
-  await delay();
   return {
     id: crypto.randomUUID(),
     checkoutUrl: "#",
@@ -30,14 +78,12 @@ export async function createCart(): Promise<Cart> {
 export async function addToCart(
   lines: { merchandiseId: string; quantity: number }[]
 ): Promise<Cart> {
-  await delay();
   // This will be handled by client-side cart management
   const cart = await getCart();
   return cart!;
 }
 
 export async function removeFromCart(lineIds: string[]): Promise<Cart> {
-  await delay();
   // This will be handled by client-side cart management
   const cart = await getCart();
   return cart!;
@@ -46,14 +92,12 @@ export async function removeFromCart(lineIds: string[]): Promise<Cart> {
 export async function updateCart(
   lines: { id: string; merchandiseId: string; quantity: number }[]
 ): Promise<Cart> {
-  await delay();
   // This will be handled by client-side cart management
   const cart = await getCart();
   return cart!;
 }
 
 export async function getCart(): Promise<Cart | undefined> {
-  await delay();
   // Cart is managed client-side, return empty cart
   return {
     id: "local-cart",
@@ -71,17 +115,24 @@ export async function getCart(): Promise<Cart | undefined> {
 export async function getCollection(
   handle: string
 ): Promise<Collection | undefined> {
-  await delay();
-
-  const collection = collectionsData.find((c) => c.handle === handle);
+  const collection = await prisma.collection.findUnique({
+    where: { handle },
+  });
 
   if (!collection) {
     return undefined;
   }
 
   return {
-    ...collection,
+    handle: collection.handle,
+    title: collection.title,
+    description: collection.description,
+    seo: {
+      title: collection.seoTitle,
+      description: collection.seoDescription,
+    },
     path: `/search/${collection.handle}`,
+    updatedAt: collection.updatedAt.toISOString(),
   };
 }
 
@@ -94,38 +145,68 @@ export async function getCollectionProducts({
   reverse?: boolean;
   sortKey?: string;
 }): Promise<Product[]> {
-  await delay();
+  // First, get the collection by handle to get its ID
+  const collectionData = await prisma.collection.findUnique({
+    where: { handle: collection },
+    select: { id: true },
+  });
 
-  const col = collectionsData.find((c) => c.handle === collection);
-
-  if (!col) {
+  if (!collectionData) {
     return [];
   }
 
-  let products = productsData
-    .filter((p) => col.productHandles.includes(p.handle))
-    .filter((p) => !p.tags.includes(HIDDEN_PRODUCT_TAG)) as Product[];
+  // Get product handles from the collection
+  const collectionProducts = await prisma.collectionProduct.findMany({
+    where: { collectionId: collectionData.id },
+    select: { productHandle: true },
+  });
 
-  // Apply sorting
-  if (sortKey === "PRICE") {
-    products.sort((a, b) => {
-      const priceA = parseFloat(a.priceRange.minVariantPrice.amount);
-      const priceB = parseFloat(b.priceRange.minVariantPrice.amount);
-      return reverse ? priceB - priceA : priceA - priceB;
-    });
-  } else if (sortKey === "CREATED_AT" || sortKey === "CREATED") {
-    products.sort((a, b) => {
-      const dateA = new Date(a.updatedAt).getTime();
-      const dateB = new Date(b.updatedAt).getTime();
-      return reverse ? dateB - dateA : dateA - dateB;
-    });
+  if (collectionProducts.length === 0) {
+    return [];
   }
 
-  return products;
+  const productHandles = collectionProducts.map((cp) => cp.productHandle);
+
+  // Build the query
+  const where: any = {
+    handle: { in: productHandles },
+    NOT: {
+      tags: { has: HIDDEN_PRODUCT_TAG },
+    },
+  };
+
+  // Determine order by
+  let orderBy: any = {};
+  if (sortKey === "PRICE") {
+    orderBy = { priceMin: reverse ? "desc" : "asc" };
+  } else if (sortKey === "CREATED_AT" || sortKey === "CREATED") {
+    orderBy = { createdAt: reverse ? "desc" : "asc" };
+  } else {
+    orderBy = { updatedAt: "desc" };
+  }
+
+  const dbProducts = await prisma.product.findMany({
+    where,
+    include: {
+      variants: true,
+      images: { orderBy: { position: "asc" } },
+      options: true,
+    },
+    orderBy,
+  });
+
+  return dbProducts.map(transformProduct);
 }
 
 export async function getCollections(): Promise<Collection[]> {
-  await delay();
+  const dbCollections = await prisma.collection.findMany({
+    where: {
+      NOT: {
+        handle: { startsWith: "hidden" },
+      },
+    },
+    orderBy: { updatedAt: "desc" },
+  });
 
   return [
     {
@@ -139,67 +220,122 @@ export async function getCollections(): Promise<Collection[]> {
       path: "/search",
       updatedAt: new Date().toISOString(),
     },
-    ...collectionsData
-      .filter((collection) => !collection.handle.startsWith("hidden"))
-      .map((collection) => ({
-        ...collection,
-        path: `/search/${collection.handle}`,
-      })),
+    ...dbCollections.map((collection) => ({
+      handle: collection.handle,
+      title: collection.title,
+      description: collection.description,
+      seo: {
+        title: collection.seoTitle,
+        description: collection.seoDescription,
+      },
+      path: `/search/${collection.handle}`,
+      updatedAt: collection.updatedAt.toISOString(),
+    })),
   ];
 }
 
 export async function getMenu(handle: string): Promise<Menu[]> {
-  await delay();
-
-  const menu = menusData[handle as keyof typeof menusData];
+  const menu = await prisma.menu.findUnique({
+    where: { handle },
+    include: {
+      items: {
+        orderBy: { position: "asc" },
+      },
+    },
+  });
 
   if (!menu) {
     return [];
   }
 
-  return menu;
+  return menu.items.map((item) => ({
+    title: item.title,
+    path: item.path,
+  }));
 }
 
 export async function getPage(handle: string): Promise<Page> {
-  await delay();
-
-  const page = pagesData.find((p) => p.handle === handle);
+  const page = await prisma.page.findUnique({
+    where: { handle },
+  });
 
   if (!page) {
     throw new Error(`Page not found: ${handle}`);
   }
 
-  return page;
+  return {
+    id: page.id,
+    title: page.title,
+    handle: page.handle,
+    body: page.body,
+    bodySummary: page.bodySummary,
+    seo: {
+      title: page.seoTitle || page.title,
+      description: page.seoDescription || page.bodySummary,
+    },
+    createdAt: page.createdAt.toISOString(),
+    updatedAt: page.updatedAt.toISOString(),
+  };
 }
 
 export async function getPages(): Promise<Page[]> {
-  await delay();
-  return pagesData;
+  const dbPages = await prisma.page.findMany({
+    orderBy: { updatedAt: "desc" },
+  });
+
+  return dbPages.map((page) => ({
+    id: page.id,
+    title: page.title,
+    handle: page.handle,
+    body: page.body,
+    bodySummary: page.bodySummary,
+    seo: {
+      title: page.seoTitle || page.title,
+      description: page.seoDescription || page.bodySummary,
+    },
+    createdAt: page.createdAt.toISOString(),
+    updatedAt: page.updatedAt.toISOString(),
+  }));
 }
 
 export async function getProduct(handle: string): Promise<Product | undefined> {
-  await delay();
+  const dbProduct = await prisma.product.findUnique({
+    where: { handle },
+    include: {
+      variants: true,
+      images: { orderBy: { position: "asc" } },
+      options: true,
+    },
+  });
 
-  const product = productsData.find((p) => p.handle === handle);
-
-  if (!product) {
+  if (!dbProduct) {
     return undefined;
   }
 
-  return product as Product;
+  return transformProduct(dbProduct);
 }
 
 export async function getProductRecommendations(
   productId: string
 ): Promise<Product[]> {
-  await delay();
+  // Get random products excluding the current one
+  const dbProducts = await prisma.product.findMany({
+    where: {
+      id: { not: productId },
+      NOT: {
+        tags: { has: HIDDEN_PRODUCT_TAG },
+      },
+    },
+    include: {
+      variants: true,
+      images: { orderBy: { position: "asc" } },
+      options: true,
+    },
+    take: 3,
+    orderBy: { updatedAt: "desc" },
+  });
 
-  // Return random products as recommendations (excluding the current product)
-  const recommendations = productsData
-    .filter((p) => p.id !== productId && !p.tags.includes(HIDDEN_PRODUCT_TAG))
-    .slice(0, 3) as Product[];
-
-  return recommendations;
+  return dbProducts.map(transformProduct);
 }
 
 export async function getProducts({
@@ -211,46 +347,46 @@ export async function getProducts({
   reverse?: boolean;
   sortKey?: string;
 }): Promise<Product[]> {
-  await delay();
-
-  let products = productsData.filter(
-    (p) => !p.tags.includes(HIDDEN_PRODUCT_TAG)
-  ) as Product[];
+  // Build the where clause
+  const where: any = {
+    NOT: {
+      tags: { has: HIDDEN_PRODUCT_TAG },
+    },
+  };
 
   // Apply search query
   if (query) {
-    const lowerQuery = query.toLowerCase();
-    products = products.filter(
-      (p) =>
-        p.title.toLowerCase().includes(lowerQuery) ||
-        p.description.toLowerCase().includes(lowerQuery) ||
-        p.tags.some((tag: string) => tag.toLowerCase().includes(lowerQuery))
-    );
+    where.OR = [
+      { title: { contains: query, mode: "insensitive" } },
+      { description: { contains: query, mode: "insensitive" } },
+      { tags: { has: query.toLowerCase() } },
+    ];
   }
 
-  // Apply sorting
+  // Determine order by
+  let orderBy: any = {};
   if (sortKey === "PRICE") {
-    products.sort((a, b) => {
-      const priceA = parseFloat(a.priceRange.minVariantPrice.amount);
-      const priceB = parseFloat(b.priceRange.minVariantPrice.amount);
-      return reverse ? priceB - priceA : priceA - priceB;
-    });
+    orderBy = { priceMin: reverse ? "desc" : "asc" };
   } else if (sortKey === "CREATED_AT") {
-    products.sort((a, b) => {
-      const dateA = new Date(a.updatedAt).getTime();
-      const dateB = new Date(b.updatedAt).getTime();
-      return reverse ? dateB - dateA : dateA - dateB;
-    });
+    orderBy = { createdAt: reverse ? "desc" : "asc" };
   } else if (sortKey === "BEST_SELLING") {
-    // For demo purposes, show featured products first
-    products.sort((a, b) => {
-      const aFeatured = a.tags.includes("featured") ? 1 : 0;
-      const bFeatured = b.tags.includes("featured") ? 1 : 0;
-      return reverse ? aFeatured - bFeatured : bFeatured - aFeatured;
-    });
+    // For demo purposes, prioritize products with "featured" tag
+    orderBy = { updatedAt: reverse ? "asc" : "desc" };
+  } else {
+    orderBy = { updatedAt: "desc" };
   }
 
-  return products;
+  const dbProducts = await prisma.product.findMany({
+    where,
+    include: {
+      variants: true,
+      images: { orderBy: { position: "asc" } },
+      options: true,
+    },
+    orderBy,
+  });
+
+  return dbProducts.map(transformProduct);
 }
 
 // Revalidate function is not needed for static data
