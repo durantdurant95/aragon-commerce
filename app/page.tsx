@@ -46,15 +46,15 @@ export default async function HomePage() {
             </Button>
           </div>
 
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             Our Products
           </h1>
-          <p className="mt-4 text-xl text-gray-600">
+          <p className="mt-4 text-xl text-muted-foreground">
             Discover our curated collection of quality products
           </p>
 
           {products.length > 0 && (
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-muted-foreground">
               Showing {products.length} product
               {products.length === 1 ? "" : "s"}
             </p>

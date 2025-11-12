@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/mode-toggle";
 import LogoSquare from "components/logo-square";
 import { getMenu } from "lib/data";
 import Link from "next/link";
@@ -35,7 +36,9 @@ export async function Navbar() {
             <Search />
           </Suspense>
         </div>
-        <div className="flex justify-end md:w-1/3"></div>
+        <div className="flex items-center gap-3 justify-end md:w-1/3">
+          <ModeToggle />
+        </div>
       </div>
     </nav>
   );

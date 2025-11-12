@@ -37,7 +37,7 @@ function ProductCard({ product }: { product: Product }) {
             priority
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">
+          <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
             <svg
               className="h-16 w-16"
               fill="none"
@@ -113,7 +113,7 @@ function ProductCard({ product }: { product: Product }) {
 export function ProductGrid({ products }: ProductGridProps) {
   if (products.length === 0) {
     return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-500">
+      <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-border text-muted-foreground">
         <svg
           className="mb-4 h-16 w-16"
           fill="none"
@@ -127,7 +127,9 @@ export function ProductGrid({ products }: ProductGridProps) {
             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
           />
         </svg>
-        <h3 className="text-xl font-semibold">No products found</h3>
+        <h3 className="text-xl font-semibold text-foreground">
+          No products found
+        </h3>
         <p className="mt-2 text-center">
           There are no products to display at the moment.
         </p>

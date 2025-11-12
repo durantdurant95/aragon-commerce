@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "components/layout/navbar";
 import { GeistSans } from "geist/font/sans";
 import { ReactNode } from "react";
@@ -23,13 +24,20 @@ export default async function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.variable}>
-      <body className="bg-neutral-50 text-black selection:bg-teal-300 dark:bg-neutral-900 dark:text-white dark:selection:bg-pink-500 dark:selection:text-white">
-        <Navbar />
-        <main>
-          {children}
-          <Toaster closeButton />
-        </main>
+    <html lang="en" className={GeistSans.variable} suppressHydrationWarning>
+      <body className="bg-background text-foreground antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <main>
+            {children}
+            <Toaster closeButton />
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );
