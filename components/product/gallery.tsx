@@ -2,13 +2,11 @@
 
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { GridTileImage } from 'components/grid/tile';
-import { useProduct, useUpdateURL } from 'components/product/product-context';
 import Image from 'next/image';
+import { useState } from 'react';
 
 export function Gallery({ images }: { images: { src: string; altText: string }[] }) {
-  const { state, updateImage } = useProduct();
-  const updateURL = useUpdateURL();
-  const imageIndex = state.image ? parseInt(state.image) : 0;
+  const [imageIndex, setImageIndex] = useState(0);
 
   const nextImageIndex = imageIndex + 1 < images.length ? imageIndex + 1 : 0;
   const previousImageIndex = imageIndex === 0 ? images.length - 1 : imageIndex - 1;
@@ -17,7 +15,7 @@ export function Gallery({ images }: { images: { src: string; altText: string }[]
     'h-full px-6 transition-all ease-in-out hover:scale-110 hover:text-black dark:hover:text-white flex items-center justify-center';
 
   return (
-    <form>
+    <>
       <div className="relative aspect-square h-full max-h-[550px] w-full overflow-hidden">
         {images[imageIndex] && (
           <Image
@@ -34,10 +32,7 @@ export function Gallery({ images }: { images: { src: string; altText: string }[]
           <div className="absolute bottom-[15%] flex w-full justify-center">
             <div className="mx-auto flex h-11 items-center rounded-full border border-white bg-neutral-50/80 text-neutral-500 backdrop-blur-sm dark:border-black dark:bg-neutral-900/80">
               <button
-                formAction={() => {
-                  const newState = updateImage(previousImageIndex.toString());
-                  updateURL(newState);
-                }}
+                onClick={() => setImageIndex(previousImageIndex)}
                 aria-label="Previous product image"
                 className={buttonClassName}
               >
@@ -45,10 +40,7 @@ export function Gallery({ images }: { images: { src: string; altText: string }[]
               </button>
               <div className="mx-1 h-6 w-px bg-neutral-500"></div>
               <button
-                formAction={() => {
-                  const newState = updateImage(nextImageIndex.toString());
-                  updateURL(newState);
-                }}
+                onClick={() => setImageIndex(nextImageIndex)}
                 aria-label="Next product image"
                 className={buttonClassName}
               >
@@ -67,10 +59,7 @@ export function Gallery({ images }: { images: { src: string; altText: string }[]
             return (
               <li key={image.src} className="h-20 w-20">
                 <button
-                  formAction={() => {
-                    const newState = updateImage(index.toString());
-                    updateURL(newState);
-                  }}
+                  onClick={() => setImageIndex(index)}
                   aria-label="Select product image"
                   className="h-full w-full"
                 >
@@ -87,6 +76,6 @@ export function Gallery({ images }: { images: { src: string; altText: string }[]
           })}
         </ul>
       ) : null}
-    </form>
+    </>
   );
 }
